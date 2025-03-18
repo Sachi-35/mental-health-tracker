@@ -3,6 +3,7 @@ import mysql.connector
 from flask_jwt_extended import JWTManager
 from routes.user_routes import user_routes
 from routes.auth_routes import auth_routes
+from routes.sentiment import sentiment_bp
 
 app = Flask(__name__)
 
@@ -28,6 +29,7 @@ jwt = JWTManager(app)
 # Register Blueprints (Routes)
 app.register_blueprint(user_routes, url_prefix="/users")
 app.register_blueprint(auth_routes, url_prefix="/auth")
+app.register_blueprint(sentiment_bp, url_prefix="/sentiment")
 
 @app.route("/")
 def home():

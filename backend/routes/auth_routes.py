@@ -36,7 +36,10 @@ def signup():
         conn.close()
         return jsonify({"message": "User registered successfully!"}), 201
     except Exception as e:
-        return jsonify({"error": str(e)}), 500
+        print("Signup Error:", e)  # This will show the error in your terminal
+        return jsonify({"error": "Internal server error"}), 500
+
+
 
 @auth_routes.route('/login', methods=['POST'])
 def login():
