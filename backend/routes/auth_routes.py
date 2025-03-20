@@ -2,17 +2,9 @@ from flask import Blueprint, request, jsonify, current_app
 from flask_jwt_extended import create_access_token
 import bcrypt
 import mysql.connector
+from db import get_db_connection
 
 auth_routes = Blueprint('auth_routes', __name__)
-
-# Function to create a new database connection
-def get_db_connection():
-    return mysql.connector.connect(
-        host=current_app.config['MYSQL_HOST'],
-        user=current_app.config['MYSQL_USER'],
-        password=current_app.config['MYSQL_PASSWORD'],
-        database=current_app.config['MYSQL_DATABASE']
-    )
 
 @auth_routes.route('/signup', methods=['POST'])
 def signup():
@@ -36,8 +28,8 @@ def signup():
         conn.close()
         return jsonify({"message": "User registered successfully!"}), 201
     except Exception as e:
-        print("Signup Error:", e)  # This will show the error in your terminal
-        return jsonify({"error": "Internal server error"}), 500
+        print("Signup Error:", e)  
+        return jsonify({"error": str(e)}), 500
 
 
 
@@ -59,7 +51,7 @@ def login():
         conn.close()
 
         if user and bcrypt.checkpw(password.encode('utf-8'), user["password"].encode('utf-8')):
-            access_token = create_access_token(identity=user["id"])
+            access_token = create_access_token(identity=str(user["id"]))
             return jsonify({"access_token": access_token}), 200
         else:
             return jsonify({"error": "Invalid credentials"}), 401

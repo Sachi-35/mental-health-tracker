@@ -26,10 +26,13 @@ def get_db_connection():
 app.config['JWT_SECRET_KEY'] = 'your_secret_key'  # Change this to a strong secret key
 jwt = JWTManager(app)
 
+from routes.mood_routes import mood_routes
+
 # Register Blueprints (Routes)
 app.register_blueprint(user_routes, url_prefix="/users")
 app.register_blueprint(auth_routes, url_prefix="/auth")
 app.register_blueprint(sentiment_bp, url_prefix="/sentiment")
+app.register_blueprint(mood_routes, url_prefix='/mood')
 
 @app.route("/")
 def home():
