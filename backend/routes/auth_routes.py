@@ -1,11 +1,11 @@
-from flask import Blueprint, request, jsonify, current_app
+from flask import Blueprint, request, jsonify
 from flask_jwt_extended import create_access_token
 import bcrypt
-import mysql.connector
 from db import get_db_connection
 
 auth_routes = Blueprint('auth_routes', __name__)
 
+# ✅ Signup Route
 @auth_routes.route('/signup', methods=['POST'])
 def signup():
     data = request.get_json()
@@ -28,11 +28,10 @@ def signup():
         conn.close()
         return jsonify({"message": "User registered successfully!"}), 201
     except Exception as e:
-        print("Signup Error:", e)  
+        print("Signup Error:", e)
         return jsonify({"error": str(e)}), 500
 
-
-
+# ✅ Login Route (returns JWT access token)
 @auth_routes.route('/login', methods=['POST'])
 def login():
     data = request.get_json()

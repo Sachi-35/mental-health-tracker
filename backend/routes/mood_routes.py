@@ -1,13 +1,13 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
-import mysql.connector
 from datetime import datetime
-from db import get_db_connection # if get_db_connection is in app.py
+from db import get_db_connection  # Adjust if it's in a different file
 
 mood_routes = Blueprint('mood_routes', __name__)
 analyzer = SentimentIntensityAnalyzer()
 
+# ✅ Route: Track mood with sentiment analysis
 @mood_routes.route('/track-mood', methods=['POST'])
 @jwt_required()
 def track_mood():
@@ -20,7 +20,11 @@ def track_mood():
         return jsonify({"error": "Text and mood_score are required"}), 400
 
     sentiment_scores = analyzer.polarity_scores(text)
-    sentiment = "positive" if sentiment_scores['compound'] > 0.05 else "negative" if sentiment_scores['compound'] < -0.05 else "neutral"
+    sentiment = (
+        "positive" if sentiment_scores['compound'] > 0.05
+        else "negative" if sentiment_scores['compound'] < -0.05
+        else "neutral"
+    )
 
     try:
         conn = get_db_connection()
@@ -41,3 +45,10 @@ def track_mood():
     except Exception as e:
         print("DB Error:", e)
         return jsonify({"error": "Database error"}), 500
+
+# Example if you want to keep it here:
+@mood_routes.route('/test-protected', methods=['GET'])
+@jwt_required()
+def protected():
+    current_user = get_jwt_identity()
+    return jsonify(logged_in_as=current_user), 200

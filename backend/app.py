@@ -4,8 +4,13 @@ from flask_jwt_extended import JWTManager
 from routes.user_routes import user_routes
 from routes.auth_routes import auth_routes
 from routes.sentiment import sentiment_bp
+from flask_jwt_extended import JWTManager
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
+app.config['JWT_SECRET_KEY'] = 'secure_password_2025'  # Use a secure, secret key!
+jwt = JWTManager(app)
 
 # Database Configuration
 app.config['MYSQL_HOST'] = 'localhost'
@@ -21,10 +26,6 @@ def get_db_connection():
         password=app.config['MYSQL_PASSWORD'],
         database=app.config['MYSQL_DATABASE']
     )
-
-# JWT Configuration
-app.config['JWT_SECRET_KEY'] = 'your_secret_key'  # Change this to a strong secret key
-jwt = JWTManager(app)
 
 from routes.mood_routes import mood_routes
 
