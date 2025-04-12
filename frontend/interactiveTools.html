@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat&family=Ubuntu&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Satisfy&display=swap"
+      rel="stylesheet"
+    />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css"
+      integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+
+  <link rel="stylesheet" href="css/style.css" >
+  <link rel="stylesheet" href="css/interactiveTools.css"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+  <body>
+    <!-- header -->
+    <header class="header">
+      <nav class="nav">
+        <div class="logo">
+          <div class="img-div">
+            <img src="images/logo.png" alt="Mental Health Tracker Logo" />
+          </div>
+          <div>
+            <h2>Mental Health Tracker</h2>
+          </div>
+        </div>
+        <div class="mobile-nav-btn">
+          <button onclick="openNav()">
+            <img src="images/Hamburger_icon.svg.png" alt="" />
+          </button>
+        </div>
+        <div id="mobile-nav" class="mobile-nav">
+          <div class="cross-icon">
+            <button onclick="closeNav()">
+              <svg
+                fill="#000000"
+                height="20px"
+                width="20px"
+                version="1.1"
+                id="Capa_1"
+                xmlns="http://www.w3.org/2000/svg"
+                xmlns:xlink="http://www.w3.org/1999/xlink"
+                viewBox="0 0 490 490"
+                xml:space="preserve"
+              >
+                <polygon
+                  points="456.851,0 245,212.564 33.149,0 0.708,32.337 212.669,245.004 0.708,457.678 33.149,490 245,277.443 456.851,490 
+                            489.292,457.678 277.331,245.004 489.292,32.337 "
+                />
+              </svg>
+            </button>
+          </div>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="resourcelibrary.html">Resources Library</a></li>
+            <li><a href="professionalTools.html">Professional Service</a></li>
+            <li>
+              <a href="interactiveTools.html" class="active"
+                >Interactive Tools</a
+              >
+            </li>
+            <li><a href="emergencyService.html">Emergency</a></li>
+          </ul>
+        </div>
+      </nav>
+    </header>
+    <!--end of header -->
+
+  <!-- Main Content -->
+  <main class="main-wrapper">
+    <section class="tools-section">
+      <div class="tools-container">
+        <div class="tools-row">
+          <!-- Mood Tracker -->
+          <div class="tool-card">
+            <h2>Track Your Mood</h2>
+            <form id="mood-form">
+              <select id="mood-select" required>
+                <option value="">Select Mood</option>
+                <option value="Happy">Happy</option>
+                <option value="Sad">Sad</option>
+                <option value="Anxious">Anxious</option>
+                <option value="Angry">Angry</option>
+                <option value="Relaxed">Relaxed</option>
+                <option value="Excited">Excited</option>
+              </select>
+              <button type="submit">Submit</button>
+            </form>
+            <div>
+            </div>
+          </div>
+
+          <div class="quiz-section card">
+            <h2>Take Mood Quiz</h2>
+            <button id="open-quiz">Start Quiz</button>
+          </div>
+
+          <div class="chart-container">
+            <h2>Your Mood Chart</h2>
+            <canvas id="moodChart" width="400" height="200"></canvas>
+          </div>
+      </section>
+
+      <section class="analysis card hidden" id="result">
+        <h2>Mood Analysis</h2>
+        <p id="moodAnalysis"></p>
+        <p id="meditationSuggestion"></p>
+      </section>
+
+  <!-- Quiz Modal -->
+  <div class="modal" id="quiz-modal">
+    <div class="modal-content">
+      <span class="cross-icon" onclick="closeModal()">&times;</span>
+      <h2>Mental Health Quiz</h2>
+      <form id="quiz-form">
+        <div class="quiz-question">
+          <label>1. How would you describe your mood today?</label>
+          <select name="q1" required>
+            <option value="">Select</option>
+            <option value="Happy">Happy</option>
+            <option value="Content">Content</option>
+            <option value="Anxious">Anxious</option>
+            <option value="Sad">Sad</option>
+            <option value="Angry">Angry</option>
+          </select>
+        </div>
+      
+        <div class="quiz-question">
+          <label>2. How well did you sleep last night?</label>
+          <select name="q2" required>
+            <option value="">Select</option>
+            <option value="Very well">Very well</option>
+            <option value="Okay">Okay</option>
+            <option value="Poorly">Poorly</option>
+            <option value="Barely slept">Barely slept</option>
+          </select>
+        </div>
+      
+        <div class="quiz-question">
+          <label>3. Do you feel overwhelmed or stressed?</label>
+          <select name="q3" required>
+            <option value="">Select</option>
+            <option value="Not at all">Not at all</option>
+            <option value="A little">A little</option>
+            <option value="Somewhat">Somewhat</option>
+            <option value="Very much">Very much</option>
+          </select>
+        </div>
+      
+        <div class="quiz-question">
+          <label>4. How motivated do you feel to complete daily tasks?</label>
+          <select name="q4" required>
+            <option value="">Select</option>
+            <option value="Highly motivated">Highly motivated</option>
+            <option value="Somewhat motivated">Somewhat motivated</option>
+            <option value="Struggling to stay motivated">Struggling to stay motivated</option>
+            <option value="No motivation at all">No motivation at all</option>
+          </select>
+        </div>
+      
+        <div class="quiz-question">
+          <label>5. Are you feeling socially connected?</label>
+          <select name="q5" required>
+            <option value="">Select</option>
+            <option value="Very connected">Very connected</option>
+            <option value="Somewhat connected">Somewhat connected</option>
+            <option value="Isolated">Isolated</option>
+            <option value="Lonely">Lonely</option>
+          </select>
+        </div>
+      
+        <div class="quiz-question">
+          <label>6. How is your appetite?</label>
+          <select name="q6" required>
+            <option value="">Select</option>
+            <option value="Normal">Normal</option>
+            <option value="Increased">Increased</option>
+            <option value="Decreased">Decreased</option>
+            <option value="No appetite">No appetite</option>
+          </select>
+        </div>
+      
+        <div class="quiz-question">
+          <label>7. Do you often feel anxious or worried?</label>
+          <select name="q7" required>
+            <option value="">Select</option>
+            <option value="Rarely">Rarely</option>
+            <option value="Occasionally">Occasionally</option>
+            <option value="Often">Often</option>
+            <option value="All the time">All the time</option>
+          </select>
+        </div>
+      
+        <div class="quiz-question">
+          <label>8. How would you describe your energy levels?</label>
+          <select name="q8" required>
+            <option value="">Select</option>
+            <option value="High">High</option>
+            <option value="Moderate">Moderate</option>
+            <option value="Low">Low</option>
+            <option value="Exhausted">Exhausted</option>
+          </select>
+        </div>
+      
+        <div class="quiz-question">
+          <label>9. Do you find joy in things you used to enjoy?</label>
+          <select name="q9" required>
+            <option value="">Select</option>
+            <option value="Always">Always</option>
+            <option value="Sometimes">Sometimes</option>
+            <option value="Rarely">Rarely</option>
+            <option value="Never">Never</option>
+          </select>
+        </div>
+      
+        <div class="quiz-question">
+          <label>10. Do you feel hopeful about the future?</label>
+          <select name="q10" required>
+            <option value="">Select</option>
+            <option value="Very hopeful">Very hopeful</option>
+            <option value="Somewhat hopeful">Somewhat hopeful</option>
+            <option value="Unsure">Unsure</option>
+            <option value="Not hopeful">Not hopeful</option>
+          </select>
+        </div>
+      
+        <button type="submit" class="submit-quiz-btn">Submit Quiz</button>
+      </form>      
+    </div>
+  </div>
+
+    <!-- footer section -->
+    <div class="footer-section">
+      <div class="container">
+        <div class="card">
+          <div class="first-section">
+            <div class="img-div">
+              <img src="images/logo.png" alt="" />
+            </div>
+            <h2 class="title">MindFullConnect</h2>
+          </div>
+        </div>
+
+        <div class="card quick-links-section">
+          <div>
+            <h2 class="">QUICK LINKS</h2>
+            <ul>
+              <li><a href="index.html" class="active">Home</a></li>
+              <li><a href="resourcelibrary.html">Resources Library</a></li>
+              <li><a href="interactiveTools.html">Interactive Tools</a></li>
+              <li><a href="professionalTools.html">Professional Service</a></li>
+              <li><a href="emergencyService.html">Emergency</a></li>
+            </ul>
+          </div>
+        </div>
+        <div class="card social-media-section">
+          <div class="">
+            <h2 class="">Socials</h2>
+            <div class="social-medias">
+              <a href="https://www.facebook.com/mentalhealthtalksindia/" target="_blank" aria-label="Visit our Facebook page">
+                  <i class="fa-brands fa-facebook"></i>
+              </a>
+              <div class="instagram-icon">
+                <a href="https://www.instagram.com/mentalhealthtalksindia/?hl=en/" target="_blank" aria-label="Visit our Instagram page">
+                      <i class="fa-brands fa-instagram"></i>
+                  </a>
+              </div>
+              <div class="twitter-icon">
+                <i class="fa-brands fa-twitter"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="bottom-footer">
+      <h2>
+        Copyright © 2025 <span>Mental health tracker</span>. All Rights Reserved
+      </h2>
+    </div>
+    <!--end of footer section -->
+  </body>
+
+  <!-- Script -->
+  <script src="js/interactiveTools.js" defer></script>
+  <script src="js/nav.js" defer></script>
+
+</body>
+</html>
