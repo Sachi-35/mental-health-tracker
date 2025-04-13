@@ -23,11 +23,11 @@ def add_mood():
         return jsonify({"success": False, "message": "Mood is required"}), 400
 
     mood = data["mood"]
-    note = data.get("note", "")  # Optional note field
+    quiz_data = data.get("quiz_data", {})  # Optional quiz data (default to empty dictionary)
     user_id = get_jwt_identity()
 
-    # Create mood entry with optional note
-    new_mood = Mood(user_id=user_id, mood=mood, note=note)
+    # Create mood entry with optional quiz_data
+    new_mood = Mood(user_id=user_id, mood=mood, quiz_data=quiz_data)
     db.session.add(new_mood)
     db.session.commit()
 

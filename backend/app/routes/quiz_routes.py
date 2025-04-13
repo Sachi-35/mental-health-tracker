@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from app.models.user import User
+from app.models.quiz_response import QuizResponse  # Assuming you have a model for quiz responses
 from app.extensions import db
 from datetime import datetime
 
@@ -15,13 +15,15 @@ def submit_quiz():
     if not user_id or not question or not answer:
         return jsonify({"error": "Missing data"}), 400
 
-    # Insert into quiz_responses table manually
+    # Using SQLAlchemy ORM to insert the response
     try:
-        query = """
-            INSERT INTO quiz_responses (user_id, question, answer, timestamp)
-            VALUES (%s, %s, %s, %s)
-        """
-        db.session.execute(query, (user_id, question, answer, datetime.utcnow()))
+        quiz_response = QuizResponse(
+            user_id=user_id,
+            question=question,
+            answer=answer,
+            timestamp=datetime.utcnow()
+        )
+        db.session.add(quiz_response)
         db.session.commit()
         return jsonify({"message": "Quiz response submitted successfully"}), 200
     except Exception as e:

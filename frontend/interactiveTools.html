@@ -90,7 +90,8 @@
   <main class="main-wrapper">
     <section class="tools-section">
       <div class="tools-container">
-        <div class="tools-row">
+        <!-- Mood and Quiz Row -->
+        <div class="tools-row two-column">
           <!-- Mood Tracker -->
           <div class="tool-card">
             <h2>Track Your Mood</h2>
@@ -106,26 +107,29 @@
               </select>
               <button type="submit">Submit</button>
             </form>
-            <div>
-            </div>
           </div>
+
 
           <div class="quiz-section card">
             <h2>Take Mood Quiz</h2>
             <button id="open-quiz">Start Quiz</button>
           </div>
 
-          <div class="chart-container">
-            <h2>Your Mood Chart</h2>
-            <canvas id="moodChart" width="400" height="200"></canvas>
-          </div>
-      </section>
+          <!-- Mood Chart Row -->
+      <div class="chart-container full-width">
+        <h2>Your Mood Chart</h2>
+        <canvas id="moodChart" width="400" height="200"></canvas>
+      </div>
 
+      <!-- Analysis Row -->
       <section class="analysis card hidden" id="result">
         <h2>Mood Analysis</h2>
         <p id="moodAnalysis"></p>
         <p id="meditationSuggestion"></p>
       </section>
+    </div>
+  </section>
+</main>
 
   <!-- Quiz Modal -->
   <div class="modal" id="quiz-modal">

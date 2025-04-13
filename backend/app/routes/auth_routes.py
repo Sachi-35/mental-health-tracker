@@ -20,10 +20,7 @@ def signup():
     if not username or not email or not password:
         return jsonify({"message": "Missing fields"}), 400
 
-    # Hash the password before saving
-    hashed_password = generate_password_hash(password)
-
-    user = User(username=username, email=email, password=hashed_password)
+    user = User(username=username, email=email, password=password)
 
     try:
         db.session.add(user)
@@ -42,7 +39,7 @@ def login():
 
     user = User.query.filter_by(email=email).first()
 
-    if user and check_password_hash(user.password, password):
+    if user and check_password_hash(user.password_hash, password):
         # Use create_access_token for easier JWT generation
         token = create_access_token(identity=user.id)
         return jsonify({'token': token, 'user': {'id': user.id, 'username': user.username, 'email': user.email}})

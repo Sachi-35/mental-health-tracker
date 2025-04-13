@@ -15,9 +15,17 @@ def analyze():
 
     # Analyze sentiment
     scores = analyze_sentiment(text)
+    
+    # Get sentiment label based on compound score
+    sentiment_label = "neutral"
+    if scores['compound'] >= 0.05:
+        sentiment_label = "positive"
+    elif scores['compound'] <= -0.05:
+        sentiment_label = "negative"
 
-    # Optional: Customize the response format if needed
+    # Return sentiment label and scores
     return jsonify({
         "success": True,
+        "sentiment_label": sentiment_label,
         "sentiment_scores": scores
     }), 200

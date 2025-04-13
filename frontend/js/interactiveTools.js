@@ -1,5 +1,9 @@
-const BASE_URL = 'http://localhost:5001';
+const BASE_URL = 'http://127.0.0.1:5001';
 const token = localStorage.getItem('token');
+if (!token) {
+    alert("You are not logged in. Please log in first.");
+    window.location.href = '/login.html';
+}
 
 // DOM Elements
 const moodForm = document.getElementById('mood-form');
@@ -29,32 +33,74 @@ async function fetchMoods() {
                 "Content-Type": "application/json"
             }
         });
-
+        
         if (!res.ok) {
             console.warn("Failed to fetch moods:", res.status);
             return;
         }
-
-        const moods = await res.json();
-        console.log("Fetched moods:", moods);
-
-        if (Array.isArray(moods)) {
+        
+        const data = await res.json();
+        console.log("Fetched moods:", data);
+        
+        if (data.success && Array.isArray(data.moods)) {
+            // Optional: Log sentiment and suggestion
+            console.log("Sentiment:", data.sentiment);
+            console.log("Suggestion:", data.suggestion);
+        
             // Group moods for chart
-            const moodCounts = moods.reduce((acc, m) => {
+            const moodCounts = data.moods.reduce((acc, m) => {
                 const date = new Date(m.timestamp).toLocaleDateString(); // Group by date
-                if (!acc[date]) acc[date] = { happy: 0, sad: 0, anxious: 0, angry: 0, neutral: 0 };
-                acc[date][m.mood.toLowerCase()] += 1; // Count each mood per date
+                if (!acc[date]) acc[date] = { happy: 0, sad: 0, anxious: 0, stressed: 0, calm: 0, excited: 0, neutral: 0 };
+                const mood = m.mood.toLowerCase();
+                acc[date][mood] = (acc[date][mood] || 0) + 1;
                 return acc;
             }, {});
-
+        
             renderChart(moodCounts);
-            renderMoodHistory(moods);
-            renderMoodAnalysis(moods);
-        }
-
+            renderMoodHistory(data.moods);
+            renderMoodAnalysis(data.moods, data.sentiment, data.suggestion);
+        }        
     } catch (err) {
         console.error("Error fetching moods:", err);
     }
+}
+
+// Function to submit mood data to the backend
+function submitMood() {
+    const mood = document.getElementById('mood-selector').value; // Get selected mood from the UI
+    const quizData = getQuizData(); // Function to retrieve the quiz data (if any)
+
+    // Make the POST request to add the mood
+    fetch(`${BASE_URL}/add_mood`, {
+        method: 'POST',
+        headers: {
+            'Authorization': `Bearer ${token}`,  // Ensure JWT token is sent in the header
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            mood: mood,  // Mood value (required)
+            quiz_data: quizData,  // Optional quiz data (if any)
+        }),
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            alert('Mood added successfully');
+            fetchMoods(); // Ensure the mood list is updated
+        } else {
+            alert('Error: ' + data.message);
+        }
+    })
+    .catch(error => console.error('Error:', error));
+}
+
+// Function to get quiz data (replace this with your actual quiz data logic)
+function getQuizData() {
+    // For demo purposes, assuming you have quiz answers stored somewhere
+    return {
+        score: 85,  // Example score from quiz
+        answers: ['A', 'C', 'B']  // Example answers array
+    };
 }
 
 function renderMoodHistory(moods) {
@@ -81,7 +127,7 @@ function renderMoodHistory(moods) {
     });
 }
 
-function renderMoodAnalysis(moods) {
+function renderMoodAnalysis(moods, sentiment, suggestion) {
     if (!moodAnalysisText || !meditationSuggestionText || !analysisSection) return;
 
     if (moods.length === 0) {
@@ -90,24 +136,7 @@ function renderMoodAnalysis(moods) {
     }
 
     const recentMood = moods[0]?.mood || 'neutral';
-    let suggestion = '';
-
-    switch (recentMood.toLowerCase()) {
-        case 'happy':
-            suggestion = "You're doing great! Keep it up 🌟";
-            break;
-        case 'sad':
-            suggestion = "Try a short meditation or call a friend 💛";
-            break;
-        case 'angry':
-            suggestion = "Take a walk or practice deep breathing 🧘‍♀️";
-            break;
-        case 'anxious':
-            suggestion = "Focus on slow breaths and grounding exercises 🌿";
-            break;
-        default:
-            suggestion = "Check in with yourself and try journaling 📝";
-    }
+    suggestion = suggestion || '';
 
     moodAnalysisText.textContent = `Recent Mood: ${recentMood}`;
     meditationSuggestionText.textContent = suggestion;
