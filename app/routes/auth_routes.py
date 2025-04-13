@@ -39,7 +39,7 @@ def login():
 
     user = User.query.filter_by(email=email).first()
 
-    if user and check_password_hash(user.password, password):
+    if user and check_password_hash(user.password_hash, password):
         # Use create_access_token for easier JWT generation
         token = create_access_token(identity=user.id)
         return jsonify({'token': token, 'user': {'id': user.id, 'username': user.username, 'email': user.email}})

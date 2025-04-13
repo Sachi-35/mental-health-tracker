@@ -6,42 +6,32 @@ from sqlalchemy import Column, Integer, String, DateTime
 
 
 class User(db.Model):
-    __tablename__ = 'users'  # This table should match the table name in your MySQL database
+    __tablename__ = 'users'
 
     id = Column(Integer, primary_key=True)
-    username = Column(String(80), unique=True, nullable=False)  # Username field with unique constraint
-    email = Column(String(120), unique=True, nullable=False)  # Email field with unique constraint
-    password_hash = Column(String(365), nullable=False)  # Stores hashed password
-    created_at = Column(DateTime, default=datetime.utcnow)  # Timestamp when the user was created
+    username = Column(String(80), unique=True, nullable=False)
+    email = Column(String(120), unique=True, nullable=False)
+    password_hash = Column(String(365), nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
+    updated_at = Column(DateTime, onupdate=datetime.utcnow)  # Add this field
 
     def __init__(self, username, email, password):
-        """
-        Constructor to initialize the user object with username, email, and password.
-        The password is hashed before storing.
-        """
         self.username = username
         self.email = email
-        self.password_hash = generate_password_hash(password)  # Password is hashed when setting
+        self.password_hash = generate_password_hash(password)
 
     def check_password(self, password):
-        """
-        Compares the provided password with the hashed password stored in the database.
-        """
         return check_password_hash(self.password_hash, password)
 
     def generate_token(self):
-        """
-        Generates a JWT token for the authenticated user, using their ID as identity.
-        """
         return create_access_token(identity=self.id)
 
     def to_dict(self):
-        """
-        Converts the User object to a dictionary format, useful for API responses.
-        """
         return {
             "id": self.id,
             "username": self.username,
             "email": self.email,
-            "created_at": self.created_at.isoformat()  # Converts datetime to ISO format string
+            "created_at": self.created_at.isoformat(),
+            "updated_at": self.updated_at.isoformat()  # Include updated_at in the output
         }
+
